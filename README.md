@@ -1,4 +1,4 @@
-# Set2setRank
+# Set2setRank SIGIR2021
 
 Set2setRank: Collaborative Set to Set Ranking for Implicit Feedback based Recommendation
 
