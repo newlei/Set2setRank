@@ -28,8 +28,6 @@ cd Set2setRank
 cd code_pytorch
 ```
 
+
 ## Acknowledgments
 We thank LMC lab. of Hefei University of Technology
-
-
-
