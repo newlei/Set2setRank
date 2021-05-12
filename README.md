@@ -57,9 +57,9 @@ Set2setRank_GCN and Set2setRank(A)_GCN will coming.
 
 - Mindspore Installation
 
-[Official website](https://www.mindspore.cn/install/)
+      [Official website](https://www.mindspore.cn/install/)
 
-[My personal experience](https://mp.weixin.qq.com/s/y8QBHicNBy6F0JoCpJQI2Q)
+      [My personal experience](https://mp.weixin.qq.com/s/y8QBHicNBy6F0JoCpJQI2Q)
 
 - Clone this repo:
 
