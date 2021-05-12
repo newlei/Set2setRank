@@ -28,6 +28,15 @@ cd Set2setRank
 cd code_pytorch
 ```
 
+#### Datasets
+
+We provide MovieLens_20M dataset. Due to the max file size to 100 MB, some data (traing_set.npy) is missing. You can generate traing_set.npy by:
+```bash
+cd MovieLens_20M
+python generate_training_npy.py
+```
+
+
 
 ## Acknowledgments
 We thank LMC lab. of Hefei University of Technology
