@@ -68,8 +68,34 @@ git clone https://github.com/newlei/Set2setRank.git
 cd Set2setRank
 cd code_mindspore
 ```
+#### Datasets
+Using the same data as pytorch implementation
+
+#### Code
+Now, we provide code of Set2setRank_BPR.
+Please open "code_mindspore/Set2setRank_BPR.py".
 
 
+## Citation
+If you find this useful for your research, please kindly cite the following paper.
+```
+@article{chen2021set,
+  title={Set2setRank: Collaborative Set to Set Ranking for Implicit Feedback based Recommendation},
+  author={Lei, Chen and Le, Wu and Kun, Zhang and  Richang, Hong and Meng, Wang}
+  journal={SIGIR},
+  year={2021}
+}
+```
+
+Besides, you may find these following works are useful for understanding GCN-based recommendation.
+```
+@article{chen2019revis,
+  title={Revisiting Graph based Collaborative Filtering: A Linear Residual Graph Convolutional Network Approach},
+  author={Lei, Chen and Le, Wu and  Richang, Hong and Kun, Zhang and Meng, Wang}
+  journal={AAAI},
+  year={2019}
+}
+```
 
 ## Acknowledgments
 We thank LMC lab. of Hefei University of Technology
