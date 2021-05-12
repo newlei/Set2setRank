@@ -45,6 +45,29 @@ Please open "code_pytorch/Set2setRank_BPR.py" and "code_pytorch/Set2setRank(A)_B
 Set2setRank_GCN and Set2setRank(A)_GCN will coming.
 
 
+## Mindspore implementation
+
+### Prerequisites
+
+- Mindspore
+- Python 3.8
+- NVIDIA GPU + CUDA CuDNN
+
+#### Installation
+
+- Mindspore Installation
+[Official website](https://www.mindspore.cn/install/)
+[My personal experience](https://mp.weixin.qq.com/s/y8QBHicNBy6F0JoCpJQI2Q)
+
+- Clone this repo:
+
+```bash
+git clone https://github.com/newlei/Set2setRank.git
+cd Set2setRank
+cd code_mindspore
+```
+
+
 
 ## Acknowledgments
 We thank LMC lab. of Hefei University of Technology
