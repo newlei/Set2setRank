@@ -36,6 +36,14 @@ cd MovieLens_20M
 python generate_training_npy.py
 ```
 
+#### Code
+Now, we provide code of Set2setRank_BPR and Set2setRank(A)_BPR.
+Please open "code_pytorch/Set2setRank_BPR.py" and "code_pytorch/Set2setRank(A)_BPR.py"
+- In each code, there are two types of dataloader, please choose one.
+- The code for calculating HR and NDCG is separate, please refer to "code_pytorch/s_test.py"
+
+Set2setRank_GCN and Set2setRank(A)_GCN will coming.
+
 
 
 ## Acknowledgments
