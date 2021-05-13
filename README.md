@@ -1,6 +1,6 @@
 # Set2setRank SIGIR2021
 
-Set2setRank: Collaborative Set to Set Ranking for Implicit Feedback based Recommendation
+**Set2setRank: Collaborative Set to Set Ranking for Implicit Feedback based Recommendation**
 
 ![Overall_framework](Figures/model.jpg)
 
