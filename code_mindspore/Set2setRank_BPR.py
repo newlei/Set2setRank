@@ -216,10 +216,10 @@ class TrainOneStep(nn.Cell):
         return ops.depend(loss_batch, self.optimizer(grads_batch))
 
 
-training_user_set,training_item_set,training_set_count = np.load('../datanpy2/training_set.npy',allow_pickle=True)
-testing_user_set,testing_item_set,testing_set_count = np.load('../datanpy2/testing_set.npy',allow_pickle=True)  
-val_user_set,val_item_set,val_set_count = np.load('../datanpy2/val_set.npy',allow_pickle=True)    
-user_rating_set_all = np.load('../datanpy2/user_rating_set_all.npy',allow_pickle=True).item()
+training_user_set,training_item_set,training_set_count = np.load('../code_pytorch/MovieLens_20M/training_set.npy',allow_pickle=True)
+testing_user_set,testing_item_set,testing_set_count = np.load('../code_pytorch/MovieLens_20M/testing_set.npy',allow_pickle=True)  
+val_user_set,val_item_set,val_set_count = np.load('../code_pytorch/MovieLens_20M/val_set.npy',allow_pickle=True)    
+user_rating_set_all = np.load('../code_pytorch/MovieLens_20M/user_rating_set_all.npy',allow_pickle=True).item()
 
 data_loader=MyAccessible(train_dict=training_user_set,num_item=item_num, num_ng=5, data_set_count=training_set_count,batch_size=2048*32)
 dataset = ds.GeneratorDataset(source=data_loader, column_names=["user","item_i","item_j"])
