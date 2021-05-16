@@ -11,6 +11,7 @@ import numpy as np
 import math
 import time
 import pdb
+import os
 
 import evaluate
 
@@ -94,17 +95,17 @@ class BPR(nn.Cell):
             neg_sim1= self.fun_z(z_ai,z_ak,False)
             neg_sim2= self.fun_z(z_aj,z_ak,False)
             one_pn = (neg_sim1+neg_sim2)
-            loss_m6 +=  one_pn#(neg_sim1+neg_sim2)#M6
+            loss_m6 +=  one_pn
             loss_m6_min = msnp.where(one_pn>loss_m6_min,one_pn,loss_m6_min)
         
         # loss_posdis = -((pos_sim1*2-loss_m6_min).sigmoid().log()).mean() 
         loss_posdis = -self.log(self.sigmoid(pos_sim1*2-loss_m6_min)).mean()
-        loss_pre = loss_posdis + (loss_m6).mean()
+        loss_pre = 0.5*loss_posdis + 1*(loss_m6).mean()
 
         l2_regulization =user_emb**2+self.squeeze(self.sum(item_i_emb**2,1))+self.squeeze(self.sum(item_j_emb**2,1))
-        l2_regulization = 0.01*self.sum(l2_regulization,-1).mean()
+        l2_regulization = 0.001*self.sum(l2_regulization,-1).mean()
         loss = loss_pre+l2_regulization
-        return loss 
+        return loss
         # predict_ui = self.sum(user_emb*item_i_emb,-1)#.sum(dim=-1)
         # predict_uj = self.sum(user_emb*item_j_emb,-1)#.sum(dim=-1)
         # loss = -self.log(self.sigmoid(predict_ui - predict_uj))
@@ -145,7 +146,7 @@ class MyAccessible:
         state = np.random.RandomState(seed=seed)
         output = np.arange(range_data, dtype=np.int32)  
         state.shuffle(output)
-        #补充最后一点，补成一个完整的batch，把最开始的部分补充到最后
+        #add last batch
         sup_data = (self.len_all*self.batch_size) - self.all_pair_len
         if sup_data>0: 
             output = np.append(output, output[:sup_data], axis=0)  
@@ -215,20 +216,29 @@ class TrainOneStep(nn.Cell):
         return ops.depend(loss_batch, self.optimizer(grads_batch))
 
 
-training_user_set,training_item_set,training_set_count = np.load('../code_pytorch/MovieLens_20M/training_set.npy',allow_pickle=True)
-testing_user_set,testing_item_set,testing_set_count = np.load('../code_pytorch/MovieLens_20M/testing_set.npy',allow_pickle=True)  
-val_user_set,val_item_set,val_set_count = np.load('../code_pytorch/MovieLens_20M/val_set.npy',allow_pickle=True)    
-user_rating_set_all = np.load('../code_pytorch/MovieLens_20M/user_rating_set_all.npy',allow_pickle=True).item()
+training_user_set,training_item_set,training_set_count = np.load('../datanpy2/training_set.npy',allow_pickle=True)
+testing_user_set,testing_item_set,testing_set_count = np.load('../datanpy2/testing_set.npy',allow_pickle=True)  
+val_user_set,val_item_set,val_set_count = np.load('../datanpy2/val_set.npy',allow_pickle=True)    
+user_rating_set_all = np.load('../datanpy2/user_rating_set_all.npy',allow_pickle=True).item()
 
-data_loader=MyAccessible(train_dict=training_user_set,num_item=item_num, num_ng=5, data_set_count=training_set_count,batch_size=2048*16)
+data_loader=MyAccessible(train_dict=training_user_set,num_item=item_num, num_ng=5, data_set_count=training_set_count,batch_size=2048*32)
 dataset = ds.GeneratorDataset(source=data_loader, column_names=["user","item_i","item_j"])
 
 loss_bpr = BPR(user_num=user_num, item_num=item_num, factor_num=64)
-optimizer_bpr = nn.Adam(loss_bpr.trainable_params(),learning_rate=0.01)
+optimizer_bpr = nn.Adam(loss_bpr.trainable_params(),learning_rate=0.005)
 net_bpr = TrainOneStep(loss_bpr, optimizer_bpr)
 
+run_id='t0'
+result_file=open('./'+run_id+'_results.txt','a')
+print(run_id)
 
-max_epoch=50
+path='../model/'+run_id 
+if (os.path.exists(path)):
+    print('has model save path')
+else:
+    os.makedirs(path)
+
+max_epoch=100
 for epoch in range(max_epoch):
     start_time = time.time()
     data_loader.ng_sample()
@@ -244,17 +254,31 @@ for epoch in range(max_epoch):
     str_print_train="epoch:"+str(epoch)+' time:'+str(round(elapsed_time,1))+'\t train loss:'+str(train_loss)
     print(str_print_train)
 
+
     u_emb,i_emb=loss_bpr.get_emb()
     user_e = u_emb.asnumpy()
-    item_e = i_emb.asnumpy() 
+    item_e = i_emb.asnumpy()
+    PATH_user_emb='../model/'+run_id+'/epoch'+str(epoch)+'user_e.npy'
+    PATH_item_emb='../model/'+run_id+'/epoch'+str(epoch)+'item_e.npy'
+    np.save(PATH_user_emb,user_e)
+    np.save(PATH_item_emb,item_e)
+    
+    if epoch%10 == 0:
+        print('--epoch/10=0')
+    else:
+        result_file.write(str_print_train)
+        result_file.write('\n')
+        result_file.flush()
+        continue
     
     all_pre=np.matmul(user_e,item_e.T)
     HR, NDCG = [], [] 
     set_all=set(range(item_num))
     #spend 461s  
-    HR_all, NDCG_all = [0]*11, [0]*11
-    evl_range=[10,20,30,40,50,60,70,80,90,100]
-    # evl_range=[20]
+    # HR_all, NDCG_all = [0]*11, [0]*11
+    # evl_range=[10,20,30,40,50,60,70,80,90,100]
+    HR_all, NDCG_all = [0]*2, [0]*2
+    evl_range=[10]
     # pdb.set_trace()
     print('start--evl---')
     test_start_time = time.time()
@@ -277,6 +301,9 @@ for epoch in range(max_epoch):
     hr_test=np.array(HR_all)/len(testing_user_set)#round(np.mean(HR),4)
     ndcg_test=np.array(NDCG_all)/len(testing_user_set)#round(np.mean(NDCG),4)   
     print(hr_test,ndcg_test)
+    str_hr_ndcg='\t'+str(hr_test[0])+str(ndcg_test[0])
+    result_file.write(str_print_train+str_hr_ndcg)
+    result_file.write('\n')
+    result_file.flush()
 
-pdb.set_trace()
 
