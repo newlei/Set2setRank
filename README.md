@@ -99,3 +99,11 @@ Besides, you may find these following works are useful for understanding GCN-bas
 
 ## Acknowledgments
 We thank LMC lab. of Hefei University of Technology
+
+##Other Information
+Self-supervised learning recommendation
+
+
+From the perspective of set, self-supervised information of implicit feedback is mined
+ 
+
