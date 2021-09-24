@@ -100,7 +100,7 @@ Besides, you may find these following works are useful for understanding GCN-bas
 ## Acknowledgments
 We thank LMC lab. of Hefei University of Technology
 
-##Other Information
+## Other Information
 Self-supervised learning recommendation
 
 
